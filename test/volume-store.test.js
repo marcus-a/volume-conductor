@@ -52,3 +52,26 @@ test("exposes DEFAULT_VOLUME of 100", () => {
   const { DEFAULT_VOLUME } = freshVolumeStore();
   assert.strictEqual(DEFAULT_VOLUME, 100);
 });
+
+test("getTheme returns default 'auto' when unset", async () => {
+  global.chrome = makeFakeChromeStorage();
+  const { getTheme } = freshVolumeStore();
+  const theme = await getTheme();
+  assert.strictEqual(theme, "auto");
+});
+
+test("setTheme then getTheme returns the stored value", async () => {
+  global.chrome = makeFakeChromeStorage();
+  const { setTheme, getTheme } = freshVolumeStore();
+  await setTheme("dark");
+  assert.strictEqual(await getTheme(), "dark");
+});
+
+test("theme storage key cannot collide with a hostname volume key", async () => {
+  global.chrome = makeFakeChromeStorage();
+  const { setTheme, setVolume, getTheme, getVolume } = freshVolumeStore();
+  await setTheme("dark");
+  await setVolume("example.com", 300);
+  assert.strictEqual(await getTheme(), "dark");
+  assert.strictEqual(await getVolume("example.com"), 300);
+});

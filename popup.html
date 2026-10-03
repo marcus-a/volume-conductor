@@ -3,16 +3,50 @@
   <head>
     <meta charset="utf-8" />
     <style>
+      :root {
+        --bg: #ffffff;
+        --fg: #1a1a1a;
+        --muted: #666666;
+        --border: #d0d0d0;
+      }
+      :root[data-theme="dark"] {
+        --bg: #1e1e1e;
+        --fg: #f0f0f0;
+        --muted: #a0a0a0;
+        --border: #444444;
+      }
       body {
         font-family: system-ui, sans-serif;
         width: 240px;
         padding: 12px;
+        background: var(--bg);
+        color: var(--fg);
+      }
+      .header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        gap: 8px;
       }
       h1 {
         font-size: 13px;
         font-weight: 600;
-        margin: 0 0 8px;
+        margin: 0;
         word-break: break-all;
+      }
+      .icon-btn {
+        flex: none;
+        background: none;
+        border: none;
+        font-size: 16px;
+        line-height: 1;
+        padding: 2px 4px;
+        cursor: pointer;
+        color: var(--fg);
+      }
+      .icon-btn:hover {
+        opacity: 0.7;
       }
       .value {
         font-size: 24px;
@@ -25,16 +59,49 @@
       }
       .disabled-message {
         font-size: 12px;
-        color: #666;
+        color: var(--muted);
+      }
+      fieldset.theme-options {
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 8px 10px;
+        margin: 0;
+      }
+      fieldset.theme-options legend {
+        font-size: 12px;
+        color: var(--muted);
+        padding: 0 4px;
+      }
+      fieldset.theme-options label {
+        display: block;
+        font-size: 13px;
+        padding: 4px 0;
       }
     </style>
   </head>
   <body>
-    <h1 id="hostname">—</h1>
-    <div class="value" id="value">100%</div>
-    <input type="range" id="slider" min="0" max="500" step="1" value="100" />
-    <div class="disabled-message" id="disabled-message" hidden>
-      Volume Conductor isn't available on this page.
+    <div id="main-view">
+      <div class="header-row">
+        <h1 id="hostname">—</h1>
+        <button id="settings-btn" class="icon-btn" title="Settings" aria-label="Settings">⚙</button>
+      </div>
+      <div class="value" id="value">100%</div>
+      <input type="range" id="slider" min="0" max="500" step="1" value="100" />
+      <div class="disabled-message" id="disabled-message" hidden>
+        Volume Conductor isn't available on this page.
+      </div>
+    </div>
+    <div id="settings-view" hidden>
+      <div class="header-row">
+        <button id="back-btn" class="icon-btn" title="Back" aria-label="Back">←</button>
+        <h1>Settings</h1>
+      </div>
+      <fieldset class="theme-options">
+        <legend>Theme</legend>
+        <label><input type="radio" name="theme" value="light" /> Light</label>
+        <label><input type="radio" name="theme" value="dark" /> Dark</label>
+        <label><input type="radio" name="theme" value="auto" /> Auto (system)</label>
+      </fieldset>
     </div>
     <script src="volume-store.js"></script>
     <script src="popup.js"></script>

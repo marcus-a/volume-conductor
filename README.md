@@ -19,6 +19,11 @@ browser restart.
 - The volume you set is stored per hostname (`chrome.storage.local`),
   so `youtube.com` and any other site each keep their own setting,
   persisted across restarts.
+- The gear icon (top right of the popup) opens a Settings view with a
+  Light/Dark/Auto theme choice. Auto follows the OS/browser's
+  `prefers-color-scheme` and updates live if it changes. The choice is
+  global (not per-site), stored under a dedicated key that can't
+  collide with a hostname's volume entry.
 
 ## Manual verification checklist
 
@@ -30,3 +35,8 @@ browser restart.
 - [ ] Navigate within YouTube to another video without a full page
       reload (SPA navigation) — the new `<video>` element picks up the
       hostname's stored volume.
+- [ ] Click the gear icon — Settings view appears, Back arrow returns
+      to the slider view.
+- [ ] Pick Light, then Dark — popup colors switch immediately.
+- [ ] Pick Auto, then change your OS theme — popup follows it while open.
+- [ ] Reopen the popup later — the theme choice persisted.
