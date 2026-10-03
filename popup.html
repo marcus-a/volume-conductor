@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        width: 240px;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0 0 8px;
+        word-break: break-all;
+      }
+      .value {
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      input[type="range"] {
+        width: 100%;
+      }
+      .disabled-message {
+        font-size: 12px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="hostname">—</h1>
+    <div class="value" id="value">100%</div>
+    <input type="range" id="slider" min="0" max="500" step="1" value="100" />
+    <div class="disabled-message" id="disabled-message" hidden>
+      Volume Conductor isn't available on this page.
+    </div>
+    <script src="volume-store.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
