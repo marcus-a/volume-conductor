@@ -8,7 +8,8 @@
 
   let hostname = null;
   try {
-    hostname = new URL(tab.url).hostname || null;
+    const u = new URL(tab.url);
+    hostname = (u.protocol === "http:" || u.protocol === "https:") ? u.hostname : null;
   } catch (err) {
     hostname = null;
   }

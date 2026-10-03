@@ -21,6 +21,10 @@
       return;
     }
 
+    if (!existing && volumePercent === VolumeStore.DEFAULT_VOLUME) {
+      return;
+    }
+
     try {
       const ctx = getAudioContext();
       const source = ctx.createMediaElementSource(mediaElement);
@@ -67,6 +71,19 @@
       applyToAllMedia(message.volume);
     }
   });
+
+  chrome.storage.onChanged.addListener((changes) => {
+    const change = changes[location.hostname];
+    if (change) {
+      applyToAllMedia(typeof change.newValue === "number" ? change.newValue : VolumeStore.DEFAULT_VOLUME);
+    }
+  });
+
+  document.addEventListener("click", () => {
+    if (audioContext && audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+  }, { once: true, capture: true });
 
   // Attach the observer before the storage read resolves, so media elements
   // inserted during that async gap are still caught (and corrected once the
