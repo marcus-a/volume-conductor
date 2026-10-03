@@ -83,13 +83,20 @@
     applyVolume(Number(sliderEl.value));
   });
 
+  function sizeValueInput() {
+    valueInputEl.style.width = Math.max(1, String(valueInputEl.value).length) + "ch";
+  }
+
   valueEl.addEventListener("click", () => {
     valueInputEl.value = sliderEl.value;
+    sizeValueInput();
     valueEl.hidden = true;
     valueEditEl.hidden = false;
     valueInputEl.focus();
     valueInputEl.select();
   });
+
+  valueInputEl.addEventListener("input", sizeValueInput);
 
   function commitValueEdit() {
     const parsed = Math.round(Number(valueInputEl.value));
