@@ -1,0 +1,9 @@
+{
+  "name": "volume-conductor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Per-site volume boost Chrome/Brave extension",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}
