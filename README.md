@@ -30,7 +30,3 @@ Only needs the `storage` permission and access to run on the pages you visit. No
 ## Development
 
 No build step, plain HTML/CSS/JS. Run `npm test` for the storage module's automated tests.
-
-## License
-
-MIT
