@@ -7,6 +7,7 @@
 
   const hostnameEl = document.getElementById("hostname");
   const valueEl = document.getElementById("value");
+  const valueInputEl = document.getElementById("value-input");
   const sliderEl = document.getElementById("slider");
   const disabledMessageEl = document.getElementById("disabled-message");
 
@@ -70,10 +71,42 @@
   sliderEl.value = volume;
   valueEl.textContent = `${volume}%`;
 
-  sliderEl.addEventListener("input", async () => {
-    const newVolume = Number(sliderEl.value);
+  async function applyVolume(newVolume) {
+    sliderEl.value = newVolume;
     valueEl.textContent = `${newVolume}%`;
     await VolumeStore.setVolume(hostname, newVolume);
     chrome.tabs.sendMessage(tab.id, { type: "setVolume", volume: newVolume }).catch(() => {});
+  }
+
+  sliderEl.addEventListener("input", () => {
+    applyVolume(Number(sliderEl.value));
+  });
+
+  valueEl.addEventListener("click", () => {
+    valueInputEl.value = sliderEl.value;
+    valueEl.hidden = true;
+    valueInputEl.hidden = false;
+    valueInputEl.focus();
+    valueInputEl.select();
+  });
+
+  function commitValueEdit() {
+    const parsed = Math.round(Number(valueInputEl.value));
+    const clamped = Number.isFinite(parsed) ? Math.min(500, Math.max(0, parsed)) : Number(sliderEl.value);
+    valueInputEl.hidden = true;
+    valueEl.hidden = false;
+    applyVolume(clamped);
+  }
+
+  valueInputEl.addEventListener("blur", commitValueEdit);
+  valueInputEl.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      valueInputEl.blur();
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      valueInputEl.hidden = true;
+      valueEl.hidden = false;
+    }
   });
 })();

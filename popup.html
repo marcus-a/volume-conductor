@@ -53,6 +53,21 @@
         font-weight: 700;
         text-align: center;
         margin-bottom: 8px;
+        cursor: text;
+      }
+      #value-input {
+        display: block;
+        width: 100%;
+        font: inherit;
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 8px;
+        background: var(--bg);
+        color: var(--fg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        box-sizing: border-box;
       }
       input[type="range"] {
         width: 100%;
@@ -85,7 +100,8 @@
         <h1 id="hostname">—</h1>
         <button id="settings-btn" class="icon-btn" title="Settings" aria-label="Settings">⚙</button>
       </div>
-      <div class="value" id="value">100%</div>
+      <div class="value" id="value" title="Click to type an exact value">100%</div>
+      <input type="number" id="value-input" min="0" max="500" step="1" hidden />
       <input type="range" id="slider" min="0" max="500" step="1" value="100" />
       <div class="disabled-message" id="disabled-message" hidden>
         Volume Conductor isn't available on this page.
