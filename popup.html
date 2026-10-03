@@ -55,22 +55,27 @@
         margin-bottom: 8px;
         cursor: text;
       }
-      #value-input[hidden] {
+      #value-edit[hidden] {
         display: none;
       }
-      #value-input {
-        display: block;
-        width: 100%;
-        font: inherit;
+      #value-edit {
+        display: flex;
+        justify-content: center;
+        align-items: baseline;
+        margin-bottom: 8px;
         font-size: 24px;
         font-weight: 700;
-        text-align: center;
-        margin-bottom: 8px;
+      }
+      #value-input {
+        font: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        text-align: right;
+        width: 3ch;
         background: transparent;
         color: var(--fg);
         border: none;
         padding: 0;
-        box-sizing: border-box;
         -moz-appearance: textfield;
         appearance: textfield;
       }
@@ -114,7 +119,7 @@
         <button id="settings-btn" class="icon-btn" title="Settings" aria-label="Settings">⚙</button>
       </div>
       <div class="value" id="value" title="Click to type an exact value">100%</div>
-      <input type="number" id="value-input" min="0" max="500" step="1" hidden />
+      <span id="value-edit" hidden><input type="number" id="value-input" min="0" max="500" step="1" />%</span>
       <input type="range" id="slider" min="0" max="500" step="5" value="100" />
       <div class="disabled-message" id="disabled-message" hidden>
         Volume Conductor isn't available on this page.

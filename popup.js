@@ -7,6 +7,7 @@
 
   const hostnameEl = document.getElementById("hostname");
   const valueEl = document.getElementById("value");
+  const valueEditEl = document.getElementById("value-edit");
   const valueInputEl = document.getElementById("value-input");
   const sliderEl = document.getElementById("slider");
   const disabledMessageEl = document.getElementById("disabled-message");
@@ -85,7 +86,7 @@
   valueEl.addEventListener("click", () => {
     valueInputEl.value = sliderEl.value;
     valueEl.hidden = true;
-    valueInputEl.hidden = false;
+    valueEditEl.hidden = false;
     valueInputEl.focus();
     valueInputEl.select();
   });
@@ -93,7 +94,7 @@
   function commitValueEdit() {
     const parsed = Math.round(Number(valueInputEl.value));
     const clamped = Number.isFinite(parsed) ? Math.min(500, Math.max(0, parsed)) : Number(sliderEl.value);
-    valueInputEl.hidden = true;
+    valueEditEl.hidden = true;
     valueEl.hidden = false;
     applyVolume(clamped);
   }
@@ -105,7 +106,7 @@
       valueInputEl.blur();
     } else if (event.key === "Escape") {
       event.preventDefault();
-      valueInputEl.hidden = true;
+      valueEditEl.hidden = true;
       valueEl.hidden = false;
     }
   });
