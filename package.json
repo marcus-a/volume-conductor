@@ -4,6 +4,6 @@
   "private": true,
   "description": "Per-site volume boost Chrome/Brave extension",
   "scripts": {
-    "test": "node --test test/"
+    "test": "node --test"
   }
 }
