@@ -64,7 +64,7 @@
     return;
   }
 
-  hostnameEl.textContent = hostname;
+  hostnameEl.textContent = hostname.replace(/^www\./, "");
 
   const volume = await VolumeStore.getVolume(hostname);
   sliderEl.value = volume;
