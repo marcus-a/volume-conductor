@@ -1,18 +1,26 @@
 {
   "manifest_version": 3,
   "name": "Volume Conductor",
-  "version": "1.0.0",
-  "description": "Per-site volume boost that remembers your setting for every site.",
+  "version": "1.1.0",
+  "description": "Per-site volume boost and limiter that remembers your setting for every site.",
   "permissions": ["storage"],
   "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "popup.html"
   },
+  "web_accessible_resources": [
+    {
+      "resources": ["limiter-worklet.js"],
+      "matches": ["<all_urls>"],
+      "use_dynamic_url": true
+    }
+  ],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["volume-store.js", "content.js"],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "all_frames": true
     }
   ]
 }

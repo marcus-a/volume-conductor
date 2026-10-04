@@ -75,3 +75,39 @@ test("theme storage key cannot collide with a hostname volume key", async () => 
   assert.strictEqual(await getTheme(), "dark");
   assert.strictEqual(await getVolume("example.com"), 300);
 });
+
+test("getLimiter returns disabled default for site and global", async () => {
+  global.chrome = makeFakeChromeStorage();
+  const { getLimiter } = freshVolumeStore();
+  const def = { enabled: false, mode: "manual", ceiling: -6, headroom: 10 };
+  assert.deepStrictEqual(await getLimiter("example.com"), def);
+  assert.deepStrictEqual(await getLimiter(null), def);
+});
+
+test("site and global limiters are stored separately", async () => {
+  global.chrome = makeFakeChromeStorage();
+  const { setLimiter, getLimiter, setVolume, getVolume } = freshVolumeStore();
+  await setVolume("example.com", 200);
+  await setLimiter("example.com", { enabled: true, mode: "manual", ceiling: -12, headroom: 6 });
+  await setLimiter(null, { enabled: true, mode: "auto", ceiling: -3, headroom: 4 });
+  assert.deepStrictEqual(await getLimiter("example.com"), { enabled: true, mode: "manual", ceiling: -12, headroom: 6 });
+  assert.deepStrictEqual(await getLimiter(null), { enabled: true, mode: "auto", ceiling: -3, headroom: 4 });
+  assert.strictEqual(await getVolume("example.com"), 200);
+});
+
+test("resolveLimiter: site wins, then global, else null", () => {
+  global.chrome = makeFakeChromeStorage();
+  const { resolveLimiter } = freshVolumeStore();
+  const site = { enabled: true, ceiling: -12 };
+  const global_ = { enabled: true, ceiling: -3 };
+  assert.strictEqual(resolveLimiter(site, global_), site);
+  assert.strictEqual(resolveLimiter({ ...site, enabled: false }, global_), global_);
+  assert.strictEqual(resolveLimiter({ ...site, enabled: false }, { ...global_, enabled: false }), null);
+});
+
+test("getLimiter upgrades saves from before auto mode existed", async () => {
+  global.chrome = makeFakeChromeStorage();
+  const { setLimiter, getLimiter } = freshVolumeStore();
+  await setLimiter("example.com", { enabled: true, ceiling: -20 });
+  assert.deepStrictEqual(await getLimiter("example.com"), { enabled: true, mode: "manual", ceiling: -20, headroom: 10 });
+});

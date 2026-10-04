@@ -10,6 +10,8 @@
         --border: #d0d0d0;
         --accent: #3b82f6;
         --hover: rgb(0 0 0 / 7%);
+        --meter: #22c55e;
+        --over: #ef4444;
       }
       :root[data-theme="dark"] {
         --bg: #1e1e1e;
@@ -102,26 +104,90 @@
         outline: none;
       }
       input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        display: block;
         width: 100%;
-      }
-      .disabled-message {
-        font-size: 12px;
-        color: var(--muted);
-      }
-      fieldset.theme-options {
-        border: none;
-        padding: 0;
+        height: 16px;
         margin: 0;
+        background: transparent;
+        cursor: pointer;
       }
-      fieldset.theme-options legend {
-        font-size: 11px;
+      input[type="range"]::-webkit-slider-runnable-track {
+        height: 4px;
+        border-radius: 2px;
+        background: var(--track, var(--border));
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        margin-top: -5px;
+        border: none;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+      #limiter-slider::-webkit-slider-runnable-track {
+        height: 8px;
+        border-radius: 4px;
+      }
+      #limiter-slider::-webkit-slider-thumb {
+        margin-top: -3px;
+      }
+      .meter-wrap {
+        position: relative;
+        padding-top: 16px;
+      }
+      .peak-marker {
+        position: absolute;
+        top: 14px;
+        height: 20px;
+        width: 2px;
+        margin-left: -1px;
+        background: var(--fg);
+        pointer-events: none;
+      }
+      .base-marker {
+        position: absolute;
+        top: 29px;
+        height: 7px;
+        width: 2px;
+        margin-left: -1px;
+        border-radius: 1px;
+        background: var(--muted);
+        pointer-events: none;
+      }
+      .base-marker[hidden],
+      .peak-marker[hidden] {
+        display: none;
+      }
+      .peak-marker span {
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        font-size: 10px;
         font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: var(--muted);
-        padding: 0 0 6px;
+        line-height: 1;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
       }
-      fieldset.theme-options label {
+      .peak-marker.over {
+        background: var(--over);
+      }
+      .peak-marker.over span {
+        color: var(--over);
+      }
+      input[type="range"]:focus-visible {
+        outline: none;
+      }
+      input[type="range"]:focus-visible::-webkit-slider-thumb {
+        outline: 1px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .section {
+        margin-top: 14px;
+      }
+      .check-row {
         display: flex;
         align-items: center;
         gap: 10px;
@@ -132,13 +198,156 @@
         cursor: pointer;
         transition: background-color 0.15s ease;
       }
-      fieldset.theme-options label:hover {
+      .check-row:hover {
         background: var(--hover);
       }
-      fieldset.theme-options label:has(input:checked) {
+      .check-row .db {
+        margin-left: auto;
+        font-variant-numeric: tabular-nums;
+        color: var(--muted);
+      }
+      .check-row input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        flex: none;
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        border: 2px solid var(--border);
+        border-radius: 4px;
+        display: grid;
+        place-content: center;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background-color 0.15s ease;
+      }
+      .check-row input[type="checkbox"]::before {
+        content: "";
+        width: 8px;
+        height: 4px;
+        border: solid #ffffff;
+        border-width: 0 0 2px 2px;
+        transform: translateY(-1px) rotate(-45deg) scale(0);
+        transition: transform 0.15s ease;
+      }
+      .check-row input[type="checkbox"]:checked {
+        border-color: var(--accent);
+        background: var(--accent);
+      }
+      .check-row input[type="checkbox"]:checked::before {
+        transform: translateY(-1px) rotate(-45deg) scale(1);
+      }
+      .check-row input[type="checkbox"]:focus-visible {
+        outline: 1px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .scale {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 4px;
+        font-variant-numeric: tabular-nums;
+      }
+      .segmented {
+        display: flex;
+        gap: 2px;
+        padding: 2px;
+        margin: 4px 0 8px;
+        border-radius: 8px;
+        background: var(--hover);
+      }
+      .segmented label {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        padding: 4px 0;
+        border-radius: 6px;
+        cursor: pointer;
+        color: var(--muted);
+      }
+      .segmented input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .segmented label:has(input:checked) {
+        background: var(--bg);
+        color: var(--fg);
+        font-weight: 600;
+        box-shadow: 0 0 0 1px var(--border);
+      }
+      .segmented label:has(input:focus-visible) {
+        outline: 1px solid var(--accent);
+      }
+      .slider-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--muted);
+        margin: 10px 0 2px;
+      }
+      .slider-label span:last-child {
+        color: var(--fg);
+        font-variant-numeric: tabular-nums;
+      }
+      input[type="range"]:disabled {
+        cursor: default;
+      }
+      input[type="range"]:disabled::-webkit-slider-thumb {
+        opacity: 0.6;
+      }
+      .segmented[hidden],
+      .headroom[hidden],
+      .ceiling-row[hidden] {
+        display: none;
+      }
+      .hint {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .controls[hidden],
+      .hint[hidden] {
+        display: none;
+      }
+      .disabled-message {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      fieldset.theme-options {
+        border: none;
+        padding: 0;
+        margin: 0;
+      }
+      fieldset.theme-options + fieldset.theme-options {
+        margin-top: 14px;
+      }
+      fieldset.theme-options legend {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        padding: 0 0 6px;
+      }
+      fieldset.theme-options > label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        padding: 7px 8px;
+        margin: 0 -8px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+      }
+      fieldset.theme-options > label:hover {
+        background: var(--hover);
+      }
+      fieldset.theme-options > label:has(input:checked) {
         background: color-mix(in srgb, var(--accent) 14%, transparent);
       }
-      fieldset.theme-options input[type="radio"] {
+      fieldset.theme-options > label > input[type="radio"] {
         appearance: none;
         -webkit-appearance: none;
         flex: none;
@@ -152,7 +361,7 @@
         cursor: pointer;
         transition: border-color 0.15s ease;
       }
-      fieldset.theme-options input[type="radio"]::before {
+      fieldset.theme-options > label > input[type="radio"]::before {
         content: "";
         width: 8px;
         height: 8px;
@@ -161,13 +370,13 @@
         transform: scale(0);
         transition: transform 0.15s ease;
       }
-      fieldset.theme-options input[type="radio"]:checked {
+      fieldset.theme-options > label > input[type="radio"]:checked {
         border-color: var(--accent);
       }
-      fieldset.theme-options input[type="radio"]:checked::before {
+      fieldset.theme-options > label > input[type="radio"]:checked::before {
         transform: scale(1);
       }
-      fieldset.theme-options input[type="radio"]:focus-visible {
+      fieldset.theme-options > label > input[type="radio"]:focus-visible {
         outline: 1px solid var(--accent);
         outline-offset: 2px;
       }
@@ -182,6 +391,29 @@
       <div class="value" id="value" title="Click to type an exact value">100%</div>
       <span id="value-edit" hidden><input type="number" id="value-input" min="0" max="500" step="1" />%</span>
       <input type="range" id="slider" min="0" max="500" step="5" value="100" />
+      <div class="section" id="limiter-section">
+        <label class="check-row">
+          <input type="checkbox" id="limiter-toggle" /> Limiter for this site
+          <span class="db" id="limiter-value"></span>
+        </label>
+        <div class="controls" id="limiter-controls" hidden>
+          <div class="segmented" id="limiter-mode-row">
+            <label><input type="radio" name="limiter-mode" value="manual" /> Manual</label>
+            <label><input type="radio" name="limiter-mode" value="auto" /> Auto</label>
+          </div>
+          <div class="meter-wrap">
+            <div class="base-marker" id="base-marker" title="Learned normal level" hidden></div>
+            <div class="peak-marker" id="peak-marker" hidden><span id="peak-label"></span></div>
+            <input type="range" id="limiter-slider" min="-60" max="0" step="1" value="-6" title="Ceiling (dBFS)" />
+          </div>
+          <div class="scale"><span>-60 dB</span><span id="meter-status"></span><span>0 dB</span></div>
+          <div class="headroom" id="headroom-row" hidden>
+            <div class="slider-label"><span>Max jump above normal</span><span id="headroom-value"></span></div>
+            <input type="range" id="headroom-slider" min="0" max="20" step="1" value="10" />
+          </div>
+        </div>
+        <div class="hint" id="limiter-global-hint" hidden></div>
+      </div>
       <div class="disabled-message" id="disabled-message" hidden>
         Volume Conductor isn't available on this page.
       </div>
@@ -198,6 +430,28 @@
         <label><input type="radio" name="theme" value="light" /> Light</label>
         <label><input type="radio" name="theme" value="dark" /> Dark</label>
         <label><input type="radio" name="theme" value="auto" /> Auto (system)</label>
+      </fieldset>
+      <fieldset class="theme-options">
+        <legend>Global limiter</legend>
+        <label class="check-row">
+          <input type="checkbox" id="global-limiter-toggle" /> Limit all sites
+          <span class="db" id="global-limiter-value"></span>
+        </label>
+        <div class="controls" id="global-limiter-controls" hidden>
+          <div class="segmented">
+            <label><input type="radio" name="global-limiter-mode" value="manual" /> Manual</label>
+            <label><input type="radio" name="global-limiter-mode" value="auto" /> Auto</label>
+          </div>
+          <div class="ceiling-row" id="global-ceiling-row">
+            <input type="range" id="global-limiter-slider" min="-60" max="0" step="1" value="-6" title="Ceiling (dBFS)" />
+            <div class="scale"><span>-60 dB</span><span>0 dB</span></div>
+          </div>
+          <div class="headroom" id="global-headroom-row" hidden>
+            <div class="slider-label"><span>Max jump above normal</span><span id="global-headroom-value"></span></div>
+            <input type="range" id="global-headroom-slider" min="0" max="20" step="1" value="10" />
+          </div>
+          <div class="hint">A site with its own limiter ticked uses that instead.</div>
+        </div>
       </fieldset>
     </div>
     <script src="volume-store.js"></script>
